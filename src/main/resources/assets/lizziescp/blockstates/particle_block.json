@@ -1,0 +1,7 @@
+    {
+      "variants": {
+        "part_on=false": { "model": "lizziescp:block/particle_block" },
+        "part_on=true": { "model": "lizziescp:block/particle_block_off" }
+      }
+    }
+

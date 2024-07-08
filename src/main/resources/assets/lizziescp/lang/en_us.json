@@ -1,0 +1,10 @@
+{
+  "item.lizziescp.selector": "Selector",
+  "itemgroup.lizziescp": "Lizzie's Custom Particles",
+
+  "block.lizziescp.particle_block": "Particle Block",
+  "particle.lizziescp.red_cherry_particle": "Red Cherry Particle",
+
+  "category.lizziescp.togglebutton": "Custom Particles",
+  "key.lizziescp.togglebutton": "Toggle Particle Block"
+}
