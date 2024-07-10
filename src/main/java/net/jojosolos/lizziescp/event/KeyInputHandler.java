@@ -16,7 +16,6 @@ public class KeyInputHandler {
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while(bindingParticleToggle.wasPressed()) {
-                client.player.sendMessage(Text.literal("Key was pressed"), false);
                 if(LizziesCustomParticlesClient.TOGGLE_PART) {
                     LizziesCustomParticlesClient.TOGGLE_PART = false;
                     ParticleBlock.TOGGLED_PART = false;
