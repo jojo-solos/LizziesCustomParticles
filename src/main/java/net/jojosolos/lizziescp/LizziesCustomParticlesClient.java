@@ -8,7 +8,7 @@ import net.jojosolos.lizziescp.particles.custom.RedCherryParticle;
 
 public class LizziesCustomParticlesClient implements ClientModInitializer {
 
-    public static Boolean TOGGLE_PART = false;
+    public static Boolean TOGGLE_PART = true;
 
     @Override
     public void onInitializeClient() {
