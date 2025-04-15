@@ -1,6 +1,7 @@
 package net.jojosolos.lizziescp.item.custom;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,29 +16,29 @@ import net.minecraft.world.World;
 
 public class SelectorItem extends Item {
 
+    NbtCompound newNbt = new NbtCompound();
+    NbtComponent component = NbtComponent.of(newNbt);
+
     public SelectorItem(Settings settings) {
         super(settings);
+        settings.component(DataComponentTypes.CUSTOM_DATA, component);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if(!world.isClient()) {
-            // initialize variables
-            if(!user.getStackInHand(hand).hasNbt()) {
-                user.getStackInHand(hand).setNbt(new NbtCompound());
-            }
             ItemStack itemStack = user.getStackInHand(hand);
-            NbtCompound newNbt = new NbtCompound();
 
             // go forward or backward based on crouch
-            if(user.isSneaking())
-                newNbt.putInt("lizziescp.nbt_particle", (itemStack.getNbt().getInt("lizziescp.nbt_particle")) - 1);
-            else
-                 newNbt.putInt("lizziescp.nbt_particle", (itemStack.getNbt().getInt("lizziescp.nbt_particle")) + 1);
-
-
+            if(user.isSneaking()) {
+                newNbt.putInt("lizziescp.nbt_particle", (itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle") - 1));
+            }
+            else {
+                newNbt.putInt("lizziescp.nbt_particle", (itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle") + 1));
+            }
+            user.getStackInHand(hand).set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
             // setting the name of the item based on the new particle selected
-            user.getStackInHand(hand).setCustomName(Text.literal("Selector ")
+            user.getStackInHand(hand).set(DataComponentTypes.CUSTOM_NAME, Text.literal("Selector ")
                     .append(Text.literal(setParticle(itemStack, newNbt)).formatted(Formatting.AQUA)));
 
             world.playSound(null, user.getBlockPos(), SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.5f, 1f);
@@ -79,11 +80,27 @@ public class SelectorItem extends Item {
                 newName = "Explosion Particles";
                 newNbt.putInt("lizziescp.nbt_particle", 6);
                 break;
+            case(7):
+                newName = "Spore Blossom Particles";
+                newNbt.putInt("lizziescp.nbt_particle", 7);
+                break;
+            case(8):
+                newName = "Enchant Particles";
+                newNbt.putInt("lizziescp.nbt_particle", 8);
+                break;
+            case(9):
+                newName = "Portal Particles";
+                newNbt.putInt("lizziescp.nbt_particle", 9);
+                break;
+            case(10):
+                newName = "Enchant Particles 2";
+                newNbt.putInt("lizziescp.nbt_particle", 10);
+                break;
             default:
                 newNbt.putInt("lizziescp.nbt_particle", 0);
                 newName = "Red Cherry Particles";
         }
-        itemStack.setNbt(newNbt);
+        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
         return newName;
     }
 

@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItemGroups {
     public static final ItemGroup PARTICLES = Registry.register(Registries.ITEM_GROUP,
-            new Identifier(LizziesCustomParticles.MODID, "lizziescp"),
+            Identifier.of(LizziesCustomParticles.MODID, "lizziescp"),
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.lizziescp"))
                     .icon(() -> new ItemStack(ModItems.SELECTOR)).entries((displayContext, entries) -> {
                         entries.add(ModItems.SELECTOR);

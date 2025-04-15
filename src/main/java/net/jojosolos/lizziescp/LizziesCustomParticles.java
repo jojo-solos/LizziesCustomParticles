@@ -14,7 +14,7 @@ public class LizziesCustomParticles implements ModInitializer {
 	public static final String MODID = "lizziescp";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-	public static final Identifier TOGGLE_PARTICLE = new Identifier(MODID, "toggle_particle");
+	public static final Identifier TOGGLE_PARTICLE = Identifier.of(MODID, "toggle_particle");
 
 	@Override
 	public void onInitialize() {
@@ -22,7 +22,7 @@ public class LizziesCustomParticles implements ModInitializer {
 		ModItems.registerModItems();
 
 		ModBlocks.registerModBlocks();
-		ModParticle.registerParticle();
+		ModParticle.registerParticles();
 
 	}
 } 

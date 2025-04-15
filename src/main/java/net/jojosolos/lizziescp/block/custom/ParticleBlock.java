@@ -4,25 +4,25 @@ import net.jojosolos.lizziescp.LizziesCustomParticlesClient;
 import net.jojosolos.lizziescp.item.ModItems;
 import net.jojosolos.lizziescp.particles.ModParticle;
 import net.minecraft.block.*;
-import net.minecraft.client.util.ParticleUtil;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.ParticleUtil;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -35,7 +35,7 @@ public class ParticleBlock extends Block implements Waterloggable {
 	protected static final VoxelShape ON_SHAPE = Block.createCuboidShape(0D, 0D, 0D, 16D, 16D, 16.0D);
 
 	public static final BooleanProperty PART_ON = BooleanProperty.of("part_on");
-    public static final IntProperty PARTICLE_TYPE = IntProperty.of("part_type", 0, 6);
+    public static final IntProperty PARTICLE_TYPE = IntProperty.of("part_type", 0, 10);
 	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public static Boolean TOGGLED_PART = LizziesCustomParticlesClient.TOGGLE_PART;
@@ -54,11 +54,12 @@ public class ParticleBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if(!world.isClient) {
-            ItemStack itemStack = player.getStackInHand(hand);
+            ItemStack itemStack = player.getStackInHand(player.getActiveHand());
             if (itemStack.getItem().equals(ModItems.SELECTOR)) {
-                world.setBlockState(pos, state.with(PARTICLE_TYPE, itemStack.getNbt().getInt("lizziescp.nbt_particle")));
+                world.setBlockState(pos, state.with(PARTICLE_TYPE, itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle")));
+                // itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle"))
             } else {
             }
         }
@@ -66,7 +67,8 @@ public class ParticleBlock extends Block implements Waterloggable {
         return ActionResult.SUCCESS;
     }
 
-    private DefaultParticleType setParticle(Integer x) {
+
+    private SimpleParticleType setParticle(Integer x) {
         switch(x) {
             case(0):
                 return ModParticle.RED_CHERRY_PARTICLES;
@@ -82,6 +84,14 @@ public class ParticleBlock extends Block implements Waterloggable {
                 return ParticleTypes.CLOUD;
             case(6):
                 return ParticleTypes.EXPLOSION;
+            case(7):
+                return ParticleTypes.FALLING_SPORE_BLOSSOM;
+            case(8):
+                return ParticleTypes.ENCHANT;
+            case(9):
+                return ParticleTypes.PORTAL;
+            case(10):
+                return ParticleTypes.ENCHANT;
             default:
                 return ModParticle.RED_CHERRY_PARTICLES;
         }
@@ -91,11 +101,11 @@ public class ParticleBlock extends Block implements Waterloggable {
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		super.randomDisplayTick(state, world, pos, random);
         if(TOGGLED_PART) {
-            if(state.get(PARTICLE_TYPE) == 0 || state.get(PARTICLE_TYPE) == 1) {
+            if(state.get(PARTICLE_TYPE) == 0 || state.get(PARTICLE_TYPE) == 1) { //pedals
                 if (random.nextInt(10) == 0) {
                     ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));
                 }
-            } else if(state.get(PARTICLE_TYPE) == 2) {
+            } else if(state.get(PARTICLE_TYPE) == 2) { //smoke
                 world.addImportantParticle(
                     ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
                     true,
@@ -106,7 +116,28 @@ public class ParticleBlock extends Block implements Waterloggable {
                     0.07,
                     0.0
                 );
-            } else
+            } else if(state.get(PARTICLE_TYPE) == 8 || state.get(PARTICLE_TYPE) == 9) { //float up , enchant/ender
+                for(int i = 0; i < 3; ++i) {
+                    int j = random.nextInt(2) * 2 - 1;
+                    int k = random.nextInt(2) * 2 - 1;
+                    double d = (double)pos.getX() + 0.5 + 0.25 * (double)j;
+                    double e = (double)((float)pos.getY() + random.nextFloat());
+                    double f = (double)pos.getZ() + 0.5 + 0.25 * (double)k;
+                    double g = (double)(random.nextFloat() * (float)j);
+                    double h = ((double)random.nextFloat() - 0.5) * 0.125;
+                    double l = (double)(random.nextFloat() * (float)k);
+                    world.addParticle(setParticle(state.get(PARTICLE_TYPE)), d, e, f, g, h, l);
+                }
+            } else if (state.get(PARTICLE_TYPE) == 7) {
+                int i = pos.getX();
+                int j = pos.getY();
+                int k = pos.getZ();
+                double d = (double)i + random.nextDouble();
+                double e = (double)j + 0.7;
+                double f = (double)k + random.nextDouble();
+                world.addParticle(setParticle(state.get(PARTICLE_TYPE)), d, e, f, 0.0, 0.0, 0.0);
+            }
+            else
                 ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));
 		}
 	}

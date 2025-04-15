@@ -14,6 +14,7 @@ public class LizziesCustomParticlesClient implements ClientModInitializer {
     public void onInitializeClient() {
         ParticleFactoryRegistry.getInstance().register(ModParticle.RED_CHERRY_PARTICLES, RedCherryParticle.Factory::new);
 
+
         KeyInputHandler.register();
     }
 }
