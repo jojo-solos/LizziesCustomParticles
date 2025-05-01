@@ -29,11 +29,16 @@ public class SelectorItem extends Item {
         if(!world.isClient()) {
             ItemStack itemStack = user.getStackInHand(hand);
 
-            // go forward or backward based on crouch
-            if(user.isSneaking()) {
-                newNbt.putInt("lizziescp.nbt_particle", (itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle") - 1));
+            // initialize variables
+            if(!itemStack.getComponents().contains(DataComponentTypes.CUSTOM_DATA)) {
+                newNbt.putInt("lizziescp.nbt_particle", 0);
+                itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
             }
-            else {
+
+            // go forward or backward based on crouch
+            if (user.isSneaking()) {
+                newNbt.putInt("lizziescp.nbt_particle", (itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle") - 1));
+            } else {
                 newNbt.putInt("lizziescp.nbt_particle", (itemStack.get(DataComponentTypes.CUSTOM_DATA).copyNbt().getInt("lizziescp.nbt_particle") + 1));
             }
             user.getStackInHand(hand).set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
@@ -43,6 +48,7 @@ public class SelectorItem extends Item {
 
             world.playSound(null, user.getBlockPos(), SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.5f, 1f);
             user.setCurrentHand(hand);
+
         }
 
         return TypedActionResult.pass(user.getStackInHand(hand));
