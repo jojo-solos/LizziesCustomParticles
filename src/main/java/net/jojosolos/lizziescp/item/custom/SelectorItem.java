@@ -102,6 +102,14 @@ public class SelectorItem extends Item {
                 newName = "Enchant Particles 2";
                 newNbt.putInt("lizziescp.nbt_particle", 10);
                 break;
+            case(11):
+                newName = "Firefly Particles";
+                newNbt.putInt("lizziescp.nbt_particle", 11);
+                break;
+            case(12):
+                newName = "Feather Particles";
+                newNbt.putInt("lizziescp.nbt_particle", 12);
+                break;
             default:
                 newNbt.putInt("lizziescp.nbt_particle", 0);
                 newName = "Red Cherry Particles";

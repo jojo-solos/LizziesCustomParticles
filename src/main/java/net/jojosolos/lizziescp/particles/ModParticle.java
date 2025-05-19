@@ -16,6 +16,12 @@ public class ModParticle {
     public static final SimpleParticleType RED_CHERRY_PARTICLES  =
             registerParticle("red_cherry_particle", FabricParticleTypes.simple());
 
+    public static final SimpleParticleType FIREFLY_PARTICLES  =
+            registerParticle("firefly_particle", FabricParticleTypes.simple());
+
+    public static final SimpleParticleType FEATHER_PARTICLES  =
+            registerParticle("feather_particle", FabricParticleTypes.simple());
+
     private static SimpleParticleType registerParticle(String name, SimpleParticleType particleType) {
         return Registry.register(Registries.PARTICLE_TYPE, Identifier.of(LizziesCustomParticles.MODID, name), particleType);
     }

@@ -14,6 +14,8 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.particle.ParticleUtil;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -26,16 +28,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.*;
 
 public class ParticleBlock extends Block implements Waterloggable {
     protected static final VoxelShape OFF_SHAPE = VoxelShapes.empty();
 	protected static final VoxelShape ON_SHAPE = Block.createCuboidShape(0D, 0D, 0D, 16D, 16D, 16.0D);
 
 	public static final BooleanProperty PART_ON = BooleanProperty.of("part_on");
-    public static final IntProperty PARTICLE_TYPE = IntProperty.of("part_type", 0, 10);
+    public static final IntProperty PARTICLE_TYPE = IntProperty.of("part_type", 0, 12);
 	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public static Boolean TOGGLED_PART = LizziesCustomParticlesClient.TOGGLE_PART;
@@ -92,6 +92,10 @@ public class ParticleBlock extends Block implements Waterloggable {
                 return ParticleTypes.PORTAL;
             case(10):
                 return ParticleTypes.ENCHANT;
+            case(11):
+                return ModParticle.FIREFLY_PARTICLES;
+            case(12):
+                return ModParticle.FEATHER_PARTICLES;
             default:
                 return ModParticle.RED_CHERRY_PARTICLES;
         }
@@ -101,7 +105,7 @@ public class ParticleBlock extends Block implements Waterloggable {
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		super.randomDisplayTick(state, world, pos, random);
         if(TOGGLED_PART) {
-            if(state.get(PARTICLE_TYPE) == 0 || state.get(PARTICLE_TYPE) == 1) { //pedals
+            if(state.get(PARTICLE_TYPE) == 0 || state.get(PARTICLE_TYPE) == 1 || state.get(PARTICLE_TYPE) == 12) { //pedals
                 if (random.nextInt(10) == 0) {
                     ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));
                 }
@@ -136,6 +140,15 @@ public class ParticleBlock extends Block implements Waterloggable {
                 double e = (double)j + 0.7;
                 double f = (double)k + random.nextDouble();
                 world.addParticle(setParticle(state.get(PARTICLE_TYPE)), d, e, f, 0.0, 0.0, 0.0);
+            }
+            else if (state.get(PARTICLE_TYPE) == 11) {
+                if (world.getLightLevel(LightType.SKY, pos) <= 13 && random.nextDouble() <= 0.7) {
+                    double d = (double)pos.getX() + random.nextDouble() * 10.0 - 5.0;
+                    double e = (double)pos.getY() + random.nextDouble() * 5.0;
+                    double f = (double)pos.getZ() + random.nextDouble() * 10.0 - 5.0;
+                    world.addParticle(setParticle(state.get(PARTICLE_TYPE)), d, e, f, 0.0, 0.0, 0.0);
+                    }
+
             }
             else
                 ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));
