@@ -105,7 +105,7 @@ public class ParticleBlock extends Block implements Waterloggable {
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		super.randomDisplayTick(state, world, pos, random);
         if(TOGGLED_PART) {
-            if(state.get(PARTICLE_TYPE) == 0 || state.get(PARTICLE_TYPE) == 1 || state.get(PARTICLE_TYPE) == 12) { //pedals
+            if(state.get(PARTICLE_TYPE) == 0 || state.get(PARTICLE_TYPE) == 1) { //pedals
                 if (random.nextInt(10) == 0) {
                     ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));
                 }
@@ -149,6 +149,11 @@ public class ParticleBlock extends Block implements Waterloggable {
                     world.addParticle(setParticle(state.get(PARTICLE_TYPE)), d, e, f, 0.0, 0.0, 0.0);
                     }
 
+            }
+            else if(state.get(PARTICLE_TYPE) == 12) {
+                if (random.nextInt(5) == 0) {
+                    ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));
+                }
             }
             else
                 ParticleUtil.spawnParticle(world, pos.up(), random, setParticle(state.get(PARTICLE_TYPE)));

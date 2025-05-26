@@ -20,7 +20,7 @@ public class FireflyParticle extends SpriteBillboardParticle {
         super(clientWorld, d, e, f, g, h, i);
         this.ascending = true;
         this.velocityMultiplier = 0.96F;
-        this.scale *= 0.75F;
+        this.scale *= 1.25F;
 
         this.velocityY *= 0.800000011920929;
         this.velocityX *= 0.800000011920929;

@@ -20,7 +20,7 @@ public class FeatherParticle extends SpriteBillboardParticle {
         this.field_43371 = (float)Math.toRadians(this.random.nextBoolean() ? -5.0 : 5.0);
         this.maxAge = 300;
         this.gravityStrength = 7.5E-4F;
-        float f = this.random.nextBoolean() ? 0.05F : 0.075F;
+        float f = this.random.nextBoolean() ? 0.15F : 0.2F;
         this.scale = f;
         this.setBoundingBoxSpacing(f, f);
         this.velocityMultiplier = 1.0F;
